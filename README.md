@@ -2,7 +2,7 @@
 
 **Senior backend engineer, 8+ years in C#, .NET, SQL Server and Azure. Specialized in APIs, integrations and event-driven systems.**
 
-📍 Dominican Republic · Remote · English (advanced) · Spanish (native)
+📍 Dominican Republic · Remote · English (B2 - intermediate) · Spanish (native)
 🌐 [CV](https://github.com/Dustman001/Dustman001/blob/main/EN.pdf) · 🌐 [Portfolio](https://dustman001.github.io) · 💼 [LinkedIn](https://www.linkedin.com/in/ivan-amado-padron-perez-39474574) · ✉️ dustman01@gmail.com
 
 ---
