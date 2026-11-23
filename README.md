@@ -7,6 +7,8 @@
 
 ---
 
+**2022–2026, one property-tech client:** 1,600+ commits · 30+ repositories · ~450 work items · top contributor to its main web app.
+
 ### What I build
 
 I connect systems that were never designed to talk to each other: canonical data models, typed APIs, change-data-capture pipelines and resilient messaging on Azure, from the SQL schema all the way to production.
@@ -39,7 +41,22 @@ flowchart LR
   Q --> T[(Cosmos DB<br/>tracking)]
 ```
 
-**Also shipped:** bidirectional sync pipelines (ADF + Functions), an access-control and license-plate-recognition system, a community web platform taken to GA, payroll modernization from batch to event-driven sync, and utility KPI apps that cut human errors by 80%.
+**Community platform architecture.** I worked across nearly every part of a community-management platform: a .NET Framework web app, its REST API, gatehouse kiosks with offline sync, background services, device sync and an accounting integration, all sharing one tested business library.
+
+```mermaid
+flowchart LR
+  W[Web app<br/>WebForms + MVC] --> L
+  M[Mobile app] --> A[REST API] --> L
+  G[Gatehouse kiosks<br/>offline sync] --> S[Gate service] --> L
+  L[[Shared business library<br/>NuGet]] --> D[(SQL Server)]
+  S -. real-time .-> P{{PubNub}} -. push .-> G
+  B[Background services] --> L
+  X[Accounting platform] -- Service Bus --> A
+```
+
+**In-app notifications across three products.** A new in-app channel in the shared messaging hub (OAuth client-credentials tokens), hub-first delivery with a database fallback, role-aware deep links that open the exact record, and one config-driven host rule validated per environment.
+
+**Also shipped:** an asynchronous reporting platform (scheduled reports, 300k+ row Excel exports), a legacy WebForms refactor into a tested service layer, bidirectional sync pipelines (ADF + Functions), an access-control and license-plate-recognition system (controllers scaled to 100,000 cards), a community web platform taken to GA, payroll modernization from batch to event-driven sync, and utility KPI apps that cut human errors by 80%.
 
 ### Toolbox
 
