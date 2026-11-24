@@ -29,6 +29,18 @@ flowchart LR
 
 **CDC event system.** A timer-triggered Azure Functions listener reads SQL Server CDC tables in every client database and publishes "entity changed" events to Event Hub. LSN checkpoints stop duplicate processing, batch sizes are configurable, and Kubernetes health probes restart a stuck listener.
 
+On the consumer side I made delivery loss-proof. Fast exponential-backoff retries are backed by a retry ceiling stored in SQL that survives instance restarts. Events that keep failing are dead-lettered with replay context, every write is deduplicated by LSN, and a transactional outbox commits the processed record and its outgoing event together. All per-event state is scoped by tenant, since two client databases can emit the same LSN. Testing end to end with real QA data then exposed six defects that had all looked like success, and I fixed them.
+
+```mermaid
+flowchart LR
+  D[(Client DBs<br/>CDC tables)] -- poll --> L[CDC listener<br/>LSN checkpoint]
+  L -- entity changed --> H{{Event Hub}}
+  H --> C[Consumer<br/>retries · LSN dedup<br/>outbox · per tenant]
+  C --> U[(Data model)]
+  C -. after N tries .-> X[Dead-letter]
+  H --> N[Notifications]
+```
+
 **Notification service.** It resolves recipients by community, role and subscription rules. Messages are queued on Azure Service Bus and delivered by email (SendGrid), SMS (Twilio) and push, with Polly v8 for resilience and Cosmos DB for tracking.
 
 ```mermaid
@@ -73,5 +85,5 @@ flowchart LR
 - **Backend:** ASP.NET Core Web API, EF Core, Dapper, Polly, REST, SOAP, webhooks
 - **Azure:** Functions, Service Bus, Event Hub, Data Factory, Key Vault, Application Insights, Azure DevOps
 - **Data:** SQL Server, CDC, Cosmos DB, PostgreSQL, Redis
-- **Architecture:** event-driven, microservices, serverless, CQRS, DDD, TDD
+- **Architecture:** event-driven, microservices, serverless, transactional outbox, idempotent messaging, CQRS, DDD, TDD
 - **AI tooling:** Claude Code, RAG, MCP
